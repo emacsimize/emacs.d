@@ -1,0 +1,6 @@
+[submodule "elisp/org-mode"]
+	path = elisp/org-mode
+	url = git://orgmode.org/org-mode.git
+[submodule "elisp/use-package"]
+	path = elisp/use-package
+	url = https://github.com/jwiegley/use-package.git

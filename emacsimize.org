@@ -1,0 +1,71 @@
+* Emacsimize.me Org Init
+  http://blog.emacsimize.me
+** Init
+   Some actions needs to be done to prepare a good base for the rest
+   of the configuration.
+*** Personal Settings
+    #+BEGIN_SRC emacs-lisp
+      (setq user-full-name "Stefan Eichberger"
+         user-mail-address "emacsimize@gmail.com")
+    #+END_SRC
+*** Load Path
+    http://www.emacswiki.org/emacs-en/LoadPath
+    I like the approach to define which packages (sub directory) should
+    be loaded.
+    #+BEGIN_SRC emacs-lisp
+      (let ((default-directory "~/.emacs.d/elisp/"))
+       	(normal-top-level-add-to-load-path '("use-package")))
+    #+END_SRC
+*** Package Repositories
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+    #+END_SRC
+*** A package manager
+   The use-package is a really great way to have a tidy installation
+   and configuration of your packages.
+   #+BEGIN_SRC emacs-lisp
+     (require 'use-package)   
+   #+END_SRC
+*** Backup of files and history
+    #+BEGIN_SRC emacs-lisp
+      (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))) 
+    #+END_SRC
+    I agree here with Sacha to save a lot but for me following is
+    enough.
+    #+BEGIN_SRC emacs-lisp
+      (setq delete-old-versions -1)
+      (setq version-control t)
+      (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list" t)))
+    #+END_SRC
+    I have to read up on this history settings.
+    http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html
+    I remeber reading this but not in detail. I disable this for now.
+    #+BEGIN_SRC emacs-lisp :tangle no
+      (setq savehist-file "~/.emacs.d/savehist")
+      (savehist-mode 1)
+      (setq savehist-save-minibuffer-history 1)
+      (setq savehist-additional-variables
+            '(kill-ring
+              search-ring
+              regexp-search-ring))
+    #+END_SRC
+** Look and Feel
+*** Clearer view on X
+    #+BEGIN_SRC emacs-lisp
+      (when window-system
+        (tooltip-mode -1)
+        (tool-bar-mode -1)
+        (menu-bar-mode -1))
+    #+END_SRC
+** Packages
+*** Luxurious Undo - undo-tree
+    #+BEGIN_SRC emacs-lisp
+      (use-package undo-tree
+        :ensure undo-tree
+        :init
+          (global-undo-tree-mode 1)
+        :config
+          (progn
+            (global-set-key (kbd "C-z") 'undo-tree-undo)
+            (global-set-key (kbd "C-S-z") 'undo-tree-redo)))   
+    #+END_SRC
