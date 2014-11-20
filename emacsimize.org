@@ -24,6 +24,7 @@
    The use-package is a really great way to have a tidy installation
    and configuration of your packages.
    #+BEGIN_SRC emacs-lisp
+     (package-refresh-contents)
      (require 'use-package)   
    #+END_SRC
 *** Backup of files and history
@@ -51,14 +52,85 @@
     #+END_SRC
 ** Look and Feel
 *** Clearer view on X
+
     #+BEGIN_SRC emacs-lisp
       (when window-system
         (tooltip-mode -1)
         (tool-bar-mode -1)
         (menu-bar-mode -1))
     #+END_SRC
+*** Paste from mouse at current cursor position (point)
+    I just hate it when I insert from my mouse clipboard and it adds
+    it at the mouse cursor and not my caret.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq mouse-yenc-at-point 't)
+    #+END_SRC
+*** Smoothen mouse scrolling
+    This makes the scolling with the mouse less irritating.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq redisplay-dont-pause t
+            scroll-margin 1
+            scroll-step 1
+            scroll-conservatively 10000
+            scroll-preserve-screen-position 1)
+      (setq mouse-wheel-follow-mouse 't)
+      (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+    #+END_SRC
+
+*** Background Color and fonts
+    Solarize them is nice and highly advanded but I'm still found of it.
+    this will brake !!!!
+
+    #+BEGIN_SRC emacs-lisp
+      (custom-set-faces
+       ;; custom-set-faces was added by Custom.
+       ;; If you edit it by hand, you could mess it up, so be careful.
+       ;; Your init file should contain only one such instance.
+       ;; If there is more than one, they won't work right.
+       '(default ((t (:stipple nil :background "darkslategrey" :foreground "AntiqueWhite" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 137 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
+    #+END_SRC
+
+*** I don't need the splash screen
+
+    #+BEGIN_SRC emacs-lisp
+      (setq inhibit-splash-screen t)
+    #+END_SRC
+
+*** Shorten the yes/no questions
+
+    #+BEGIN_SRC emacs-lisp
+      (fset 'yes-or-no-p 'y-or-n-p)
+    #+END_SRC
+
+*** Tabs are bad!
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default indent-tabs-mode nil)
+      (setq-default tab-width 2)
+      (setq sh-basic-offset 2
+              sh-indentation 2)
+    #+END_SRC
+
+*** Ido mode
+
+    #+BEGIN_SRC emacs-lisp
+      (ido-mode t)
+    #+END_SRC
+    
+    I like to have it vertically
+    
+    #+BEGIN_SRC emacs-lisp
+      (use-package ido-vertical-mode
+        :ensure ido-vertical-mode
+        :init
+        (ido-vertical-mode))
+    #+END_SRC
+
 ** Packages
 *** Luxurious Undo - undo-tree
+    
     #+BEGIN_SRC emacs-lisp
       (use-package undo-tree
         :ensure undo-tree
@@ -68,4 +140,154 @@
           (progn
             (global-set-key (kbd "C-z") 'undo-tree-undo)
             (global-set-key (kbd "C-S-z") 'undo-tree-redo)))   
+    #+END_SRC
+*** Htmlize
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package htmlize
+        :ensure htmlize)
+    #+END_SRC
+
+*** Tramp
+    Just awesome.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package tramp
+        :ensure tramp
+        :config
+          (progn
+            (setq tramp-default-method "ssh"
+                  tramp-default-user "eichberger"
+                  ido-enable-tramp-completion t
+                  tramp-backup-directory-alist backup-directory-alist
+                  auto-save-file-name-transforms nil)
+            (tramp-set-completion-function "ssh"
+                                           '((tramp-parse-sconfig "~/.ssh/config")))))
+    #+END_SRC
+*** Smart Mode Line
+    Cleans up your mode line
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package smart-mode-line
+        :ensure smart-mode-line
+        :init
+          (sml/setup))
+    #+END_SRC
+*** Autocomplete me
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package auto-complete
+        :ensure auto-complete
+        :init
+        (global-auto-complete-mode +1)
+        :config
+        (setq ac-auto-show-menu t
+            ac-quick-help-delay 0.5
+            ac-use-fuzzy t))
+    #+END_SRC
+*** ibuffer
+    This is here by default but I put the configuration here
+
+    #+BEGIN_SRC emacs-lisp
+      (setq ibuffer-saved-filter-groups
+            (quote (("default"
+                     ("files" (or
+                               (mode . emacs-lisp-mode)
+                               (mode . cperl-mode)
+                               (mode . elpy-mode)
+                               (mode . python-mode)
+                               (mode . sh-mode)
+                               (mode . conf-unix-mode)
+                               (mode . conf-space-mode)
+                               (mode . conf-mode)
+                               (mode . fundamental-mode)
+                               (mode . text-mode)))
+                     ("tramp" (or
+                               (name . "^\/ssh")))
+                     ("eshells" (or
+                                 (name . "^\\*eshell")))
+                     ("confluence" (mode . confluence-mode))
+                     ("dired" (mode . dired-mode))
+                     ("emacs" (or
+                               (name . "^\\*scratch\\*$")
+                               (name . "^\\*Warnings\\*$")
+                               (name . "^\\*Buffer List")
+                               (name . "^\\*Completions\\*$")
+                               (name . "^\\*Help\\*$")
+                               (name . "^\\*\\*$")))))))
+
+
+      (add-hook 'ibuffer-mode-hook
+                (lambda ()
+                  (ibuffer-switch-to-saved-filter-groups "default")))
+
+      ;; (use-package ibuf-ext
+      ;;   :ensure ibuf-ext
+      ;;   :config
+      ;;   (progn
+      ;;     (add-to-list 'ibuffer-never-show-predicates "^\\*tramp")
+      ;;     (add-to-list 'ibuffer-never-show-predicates "^\\*helm")
+      ;;     (add-to-list 'ibuffer-never-show-predicates "^\\*Messages")
+      ;;     (add-to-list 'ibuffer-never-show-predicates "^\\*Backtrace")))
+      (global-set-key (kbd "C-x C-b") 'ibuffer)
+    #+END_SRC
+
+** Custom Functions
+*** Open New Eshell
+    I got used of Eshell which adds some nice possiblities to my daily
+    work.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun eshell-new ()
+        (interactive)
+        (eshell (quote (-1))))
+
+      (global-set-key (kbd "s-t") 'eshell-new)
+    #+END_SRC
+*** Sudo edit file
+    I want to edit a file if I'm using dired mode with sudo
+    rights. Especially if I work remote.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package dired+
+        :ensure dired+)
+
+      (defun sudo-edit-current-file ()
+        (interactive)
+        (let ((my-file-name) ; fill this with the file to open                                                                                                                      
+              (position))    ; if the file is already open save position                                                                                                            
+          (if (equal major-mode 'dired-mode) ; test if we are in dired-mode                                                                                                         
+              (progn
+                (setq my-file-name (dired-get-file-for-visit))
+                (find-alternate-file (prepare-tramp-sudo-string my-file-name)))
+            (setq my-file-name (buffer-file-name); hopefully anything else is an already opened file                                                                                
+                  position (point))
+            (find-alternate-file (prepare-tramp-sudo-string my-file-name))
+            (goto-char position))))
+
+
+      (defun prepare-tramp-sudo-string (tempfile)
+        (if (file-remote-p tempfile)
+            (let ((vec (tramp-dissect-file-name tempfile)))
+
+              (tramp-make-tramp-file-name
+               "sudo"
+               (tramp-file-name-user nil)
+               (tramp-file-name-host vec)
+               (tramp-file-name-localname vec)
+               (format "ssh:%s@%s|"
+                       (tramp-file-name-user vec)
+                       (tramp-file-name-host vec))))
+          (concat "/sudo:root@localhost:" tempfile)))
+
+      (define-key dired-mode-map [s-return] 'sudo-edit-current-file)
+    #+END_SRC
+*** Expand Region
+    This is very handy.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package expand-region
+        :ensure expand-region
+        :config
+        (global-set-key (kbd "C-=") 'er/expand-region))
     #+END_SRC
