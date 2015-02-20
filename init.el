@@ -19,7 +19,9 @@
  '(dired-hide-details-hide-symlink-targets nil)
  '(eshell-modules-list
    (quote
-    (eshell-alias eshell-banner eshell-basic eshell-cmpl eshell-dirs eshell-glob eshell-hist eshell-ls eshell-pred eshell-prompt eshell-script eshell-term eshell-tramp eshell-unix))))
+    (eshell-alias eshell-banner eshell-basic eshell-cmpl eshell-dirs eshell-glob eshell-hist eshell-ls eshell-pred eshell-prompt eshell-script eshell-term eshell-tramp eshell-unix)))
+ '(jiralib-url "https://jira.daotec.com")
+ '(org-agenda-files (quote ("~/Documents/Org/Entenhausen.org"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

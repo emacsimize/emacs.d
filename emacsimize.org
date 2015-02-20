@@ -128,6 +128,12 @@
         (ido-vertical-mode))
     #+END_SRC
 
+*** Org Mode Tunes
+    I want to clock into drawers
+
+    #+BEGIN_SRC emacs-lisp
+    
+    #+END_SRC
 ** Packages
 *** Luxurious Undo - undo-tree
     
@@ -231,7 +237,20 @@
       ;;     (add-to-list 'ibuffer-never-show-predicates "^\\*Backtrace")))
       (global-set-key (kbd "C-x C-b") 'ibuffer)
     #+END_SRC
+*** dsvn 
+    an svn interface
 
+    #+BEGIN_SRC emacs-lisp
+      (autoload 'svn-status "dsvn" "Run `svn status'." t)
+      (autoload 'svn-update "dsvn" "Run `svn update'." t)
+    #+END_SRC
+*** ace-jump
+    jump around ...
+    
+    #+BEGIN_SRC emacs-lisp
+      (require 'ace-jump-mode)
+      (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+    #+END_SRC
 ** Custom Functions
 *** Open New Eshell
     I got used of Eshell which adds some nice possiblities to my daily
